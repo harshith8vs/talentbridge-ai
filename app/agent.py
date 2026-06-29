@@ -202,10 +202,17 @@ def security_checkpoint(ctx: Context, node_input: Any) -> Event:
     is_injection = any(kw in text_content.lower() for kw in injection_keywords)
     
     # 3. Domain-Specific Rule: Validate GPA bounds
-    gpa_match = re.search(r'\bgpa\b[:\s\-]*(\d+(?:\.\d+)?)\b', text_content, re.IGNORECASE)
+    gpa_val = None
+    m = re.search(r'\b(?:c?gpa)\b[:\s\-\w]*?(\d+(?:\.\d+)?)\b', text_content, re.IGNORECASE)
+    if m:
+        gpa_val = float(m.group(1))
+    else:
+        m2 = re.search(r'\b(\d+(?:\.\d+)?)\b[:\s\-\w]*?\b(?:c?gpa)\b', text_content, re.IGNORECASE)
+        if m2:
+            gpa_val = float(m2.group(1))
+
     invalid_gpa = False
-    if gpa_match:
-        gpa_val = float(gpa_match.group(1))
+    if gpa_val is not None:
         if gpa_val < 0.0 or gpa_val > 10.0:
             invalid_gpa = True
             
@@ -229,7 +236,8 @@ def security_checkpoint(ctx: Context, node_input: Any) -> Event:
     if invalid_gpa:
         return Event(
             route="security_violation",
-            output="Security Policy Block: Invalid academic data detected. GPA value must be between 0.0 and 10.0."
+            output="Security Policy Block: Invalid GPA. GPA must be between 0.0 and 10.0.",
+            state={"security_error": "Invalid GPA. GPA must be between 0.0 and 10.0."}
         )
 
     # Proceed with redacted content
