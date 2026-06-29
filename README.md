@@ -1,6 +1,6 @@
 # TalentBridge AI
 
-TalentBridge AI is a secure, multi-agent platform designed to help students—especially underserved and first-generation college students—discover their strengths, match with scholarships and hackathons, connect with mentors, and generate actionable 6-month development roadmaps.
+TalentBridge AI is a secure, AI-powered multi agent platform that empowers underserved and first generation college students by analyzing their profiles, identifying strengths and skill gaps, matching them with scholarships, hackathons, and mentors, and generating personalized 6 month development roadmaps.
 
 ## Architecture Diagram
 
